@@ -77,16 +77,17 @@ function generateAthenaQuery(request, fields) {
  * @param  {string} outputLocation The S3 path (s3://<bucket>/<path>) to store the query result.
  * @return {Object} {"QueryExecutionId": "string"}
  */
-function runAthenaQuery(region, database, query, outputLocation) {
+function runAthenaQuery(region, database, query, workgroup) {
   var payload = {
     ClientRequestToken: uuidv4(),
     QueryExecutionContext: {
       Database: database
     },
     QueryString: query,
-    ResultConfiguration: {
-      OutputLocation: outputLocation
-    }
+//    ResultConfiguration: {
+//      OutputLocation: outputLocation
+//    },
+    WorkGroup: workgroup
   };
   return AWS.post(
     'athena',
@@ -251,7 +252,7 @@ function getDataFromAthena(request) {
     params.awsRegion,
     params.databaseName,
     query,
-    params.outputLocation
+    params.workgroup
   );
   var queryExecutionId = runResult.QueryExecutionId;
   waitAthenaQuery(params.awsRegion, queryExecutionId);

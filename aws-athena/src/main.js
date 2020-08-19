@@ -60,10 +60,17 @@ function getConfig(request) {
 
   config
     .newTextInput()
-    .setId('outputLocation')
-    .setName('Query Output Location')
-    .setHelpText('S3 path to store the Athena query results')
-    .setPlaceholder('s3://<bucket>/<directory>');
+    .setId('workgroup')
+    .setName('Workgroup')
+    .setHelpText('Athena Workgroup (optional)')
+    .setPlaceholder('primary');
+  
+//  config
+//    .newTextInput()
+//    .setId('outputLocation')
+//    .setName('Query Output Location')
+//    .setHelpText('S3 path to store the Athena query results. Optional if workgroup is set.')
+//    .setPlaceholder('s3://<bucket>/<directory>');
 
   config
     .newTextInput()
@@ -122,11 +129,17 @@ function validateConfig(configParams) {
   if (!configParams.tableName) {
     throwUserError('Table Name is empty.');
   }
-  if (configParams.outputLocation.indexOf('s3://') !== 0) {
-    throwUserError(
-      'Query Output Location must in the format of s3://<bucket>/<directory>'
-    );
+  if (!configParams.workgroup) {
+    throwUserError('Workgroup is empty.');
   }
+  if (!configParams.outputLocation) {
+    throwUserError('Workgroup is empty.');
+  }
+//  if (configParams.outputLocation && configParams.outputLocation.indexOf('s3://') !== 0) {
+//    throwUserError(
+//      'Query Output Location must in the format of s3://<bucket>/<directory>'
+//    );
+//  }
   if (configParams.rowLimit) {
     var rowLimit = parseInt(configParams.rowLimit);
     if (isNaN(rowLimit)) {
@@ -166,3 +179,4 @@ function getData(request) {
     throwUserError(err.message);
   }
 }
+
